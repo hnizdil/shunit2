@@ -32,10 +32,6 @@ SHUNIT_STDOUT=${SHUNIT_STDOUT:-${SHUNIT_TRUE}}
 # Include environment
 SHUNIT_INCLUDE_ENV=${SHUNIT_INCLUDE_ENV:-${SHUNIT_TRUE}}
 
-#_shunit_warn() { echo "shunit2:WARN $@" >&2; }
-#_shunit_error() { echo "shunit2:ERROR $@" >&2; }
-#_shunit_fatal() { echo "shunit2:FATAL $@" >&2; exit ${SHUNIT_ERROR}; }
-
 # function for escaping XML special chars
 
 _shunit_escape_xml()
@@ -105,7 +101,6 @@ fi
 #
 
 __SHUNIT_ASSERT_MSG_PREFIX='shunit.ASSERT'
-#__SHUNIT_ASSERT_MSG_PREFIX='ASSERT:'
 __SHUNIT_MODE_SOURCED='sourced'
 __SHUNIT_MODE_STANDALONE='standalone'
 __SHUNIT_PARENT=${SHUNIT_PARENT:-$0}
@@ -170,8 +165,6 @@ assertEquals()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -lt 2 -o $# -gt 3 ]; then
-#    _shunit_error "assertEquals() requires two or three arguments; $# given"
-#    _shunit_error "1: ${1:+$1} 2: ${2:+$2} 3: ${3:+$3}${4:+ 4: $4}"
     _shunit_assertError "assertEquals() requires two or three arguments; $# given 1: ${1:+$1} 2: ${2:+$2} 3: ${3:+$3}"
     return ${SHUNIT_ERROR}
   fi
@@ -210,7 +203,6 @@ assertNotEquals()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -lt 2 -o $# -gt 3 ]; then
-#    _shunit_error "assertNotEquals() requires two or three arguments; $# given"
     _shunit_assertError "assertNotEquals() requires two or three arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -248,7 +240,6 @@ assertNull()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -lt 1 -o $# -gt 2 ]; then
-#    _shunit_error "assertNull() requires one or two arguments; $# given"
     _shunit_assertError "assertNull() requires one or two arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -278,7 +269,6 @@ assertNotNull()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -gt 2 ]; then  # allowing 0 arguments as $1 might actually be null
-#    _shunit_error "assertNotNull() requires one or two arguments; $# given"
     _shunit_assertError "assertNotNull() requires one or two arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -311,7 +301,6 @@ assertSame()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -lt 2 -o $# -gt 3 ]; then
-#    _shunit_error "assertSame() requires two or three arguments; $# given"
     _shunit_assertError "assertSame() requires two or three arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -342,7 +331,6 @@ assertNotSame()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -lt 2 -o $# -gt 3 ]; then
-#    _shunit_error "assertNotSame() requires two or three arguments; $# given"
     _shunit_assertError "assertNotSame() requires two or three arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -386,7 +374,6 @@ assertTrue()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -gt 2 ]; then
-#    _shunit_error "assertTrue() takes one two arguments; $# given"
     _shunit_assertError "assertTrue() takes one two arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -452,7 +439,6 @@ assertFalse()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -lt 1 -o $# -gt 2 ]; then
-#    _shunit_error "assertFalse() quires one or two arguments; $# given"
     _shunit_assertError "assertFalse() requires one or two arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -507,7 +493,6 @@ fail()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -gt 1 ]; then
-#    _shunit_error "fail() requires zero or one arguments; $# given"
     _shunit_assertError "fail() requires zero or one arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -538,7 +523,6 @@ failNotEquals()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -lt 2 -o $# -gt 3 ]; then
-#    _shunit_error "failNotEquals() requires one or two arguments; $# given"
     _shunit_assertError "failNotEquals() requires one or two arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -572,7 +556,6 @@ failSame()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -lt 2 -o $# -gt 3 ]; then
-#    _shunit_error "failSame() requires two or three arguments; $# given"
     _shunit_assertError "failSame() requires two or three arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -605,7 +588,6 @@ failNotSame()
 {
   ${_SHUNIT_LINENO_}
   if [ $# -lt 2 -o $# -gt 3 ]; then
-#    _shunit_error "failNotEquals() requires one or two arguments; $# given"
     _shunit_assertError "failNotEquals() requires one or two arguments; $# given"
     return ${SHUNIT_ERROR}
   fi
@@ -837,9 +819,6 @@ _shunit_cleanup()
     # add 128 to signal and exit
     exit `expr ${_shunit_signal_} + 128`
   elif [ ${__shunit_reportGenerated} -eq ${SHUNIT_FALSE} ] ; then
-#    _shunit_assertFail 'Unknown failure encountered running a test'
-#    _shunit_generateReport
-#    exit ${SHUNIT_ERROR}
     _shunit_assertError 'Unknown failure encountered running a test'
   fi
 
@@ -871,7 +850,6 @@ _shunit_execSuite()
 
     # execute the test
     echo "${_shunit_case_}"
-#    eval ${_shunit_test_}
     eval ${_shunit_case_}
 
     # store the test case execution end time and duration
@@ -1163,9 +1141,7 @@ if [ "${__shunit_mode}" = "${__SHUNIT_MODE_STANDALONE}" ]; then
   . "`_shunit_prepForSourcing \"${__shunit_script}\"`"
 fi
 
-#  for _shunit_test_ in ${__shunit_suite}; do
 # create buffer files for stdout and stderr
-
 __shunit_system_out=$(mktemp 'shunit-out.XXXX')
 __shunit_system_err=$(mktemp 'shunit-err.XXXX')
 
