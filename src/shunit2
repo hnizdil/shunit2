@@ -43,6 +43,9 @@ else
   SHUNIT_COLOR_RESET=
 fi
 
+# test not verbose by default
+SHUNIT_VERBOSE_TEST=${SHUNIT_VERBOSE_TEST:-${SHUNIT_FALSE}}
+
 # function for escaping XML special chars
 
 _shunit_escape_xml()
@@ -861,16 +864,19 @@ _shunit_execSuite()
 
     echo "${_shunit_case_}"
 
-    # execute the test capturing its output
-    eval $_shunit_case_ >"$__shunit_system_out" 2>"$__shunit_system_err"
-
-    # show test output if failed
-    if [ $__shunit_testSuccess -ne $SHUNIT_TRUE ]; then
-      echo TEST FAILED!
-      echo STDOUT:
-      cat $__shunit_system_out | sed 's/^/--> /'
-      echo STDERR:
-      cat $__shunit_system_err | sed 's/^/--> /'
+    if [ $SHUNIT_VERBOSE_TEST -eq ${SHUNIT_TRUE} ] ; then
+      eval $_shunit_case_
+    else
+      # execute the test capturing its output
+      eval $_shunit_case_ >"$__shunit_system_out" 2>"$__shunit_system_err"
+      # show test output if failed
+      if [ $__shunit_testSuccess -ne $SHUNIT_TRUE ]; then
+        echo TEST FAILED!
+        echo STDOUT:
+        cat $__shunit_system_out | sed 's/^/--> /'
+        echo STDERR:
+        cat $__shunit_system_err | sed 's/^/--> /'
+      fi
     fi
 
     # store the test case execution end time and duration
