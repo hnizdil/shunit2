@@ -32,6 +32,17 @@ SHUNIT_STDOUT=${SHUNIT_STDOUT:-${SHUNIT_TRUE}}
 # Include environment
 SHUNIT_INCLUDE_ENV=${SHUNIT_INCLUDE_ENV:-${SHUNIT_TRUE}}
 
+# if interactive, try colors
+if [ -t 0 ]; then
+  SHUNIT_COLOR_SUCCESS=${SHUNIT_COLOR_SUCCESS:-}
+  SHUNIT_COLOR_FAILURE=${SHUNIT_COLOR_FAILURE:-}
+  SHUNIT_COLOR_RESET=${SHUNIT_COLOR_RESET:-}
+else
+  SHUNIT_COLOR_SUCCESS=
+  SHUNIT_COLOR_FAILURE=
+  SHUNIT_COLOR_RESET=
+fi
+
 # function for escaping XML special chars
 
 _shunit_escape_xml()
@@ -945,18 +956,19 @@ EOF
         && _shunit_skipped_="skipped=${__shunit_assertsSkipped}"
 
     if [ ${_shunit_ok_} -eq ${SHUNIT_TRUE} ]; then
-      _shunit_msg_='OK'
+      _shunit_msg_="${SHUNIT_COLOR_SUCCESS}OK"
       [ -n "${_shunit_skipped_}" ] \
           && _shunit_msg_="${_shunit_msg_} (${_shunit_skipped_})"
+      _shunit_msg_="${_shunit_msg_}${SHUNIT_COLOR_RESET}"
     else
-      _shunit_msg_="FAILED (${_shunit_failures_}"
+      _shunit_msg_="${SHUNIT_COLOR_FAILURE}FAILED (${_shunit_failures_}"
       [ -n "${_shunit_skipped_}" ] \
           && _shunit_msg_="${_shunit_msg_},${_shunit_skipped_}"
-      _shunit_msg_="${_shunit_msg_})"
+      _shunit_msg_="${_shunit_msg_})${SHUNIT_COLOR_RESET}"
     fi
 
     echo
-    echo ${_shunit_msg_}
+    echo -e ${_shunit_msg_}
   fi
   __shunit_reportGenerated=${SHUNIT_TRUE}
 
@@ -996,7 +1008,8 @@ _shunit_assertFail()
   __shunit_testSuccess=${SHUNIT_FALSE}
   __shunit_assertsFailed=`expr ${__shunit_assertsFailed} + 1`
   __shunit_assertsTotal=`expr ${__shunit_assertsTotal} + 1`
-  [ ${SHUNIT_STDOUT} -eq ${SHUNIT_TRUE} ] && echo "${__SHUNIT_ASSERT_MSG_PREFIX}: ${_shunit_msg_}"
+  [ ${SHUNIT_STDOUT} -eq ${SHUNIT_TRUE} ] && \
+    echo -e "${SHUNIT_COLOR_FAILURE}${__SHUNIT_ASSERT_MSG_PREFIX}: ${_shunit_msg_}${SHUNIT_COLOR_RESET}"
 
   __shunit_case_errors="${__shunit_case_errors}<failure type=\"${__SHUNIT_ASSERT_MSG_PREFIX}\" message=\"$(echo "${_shunit_msg_}" | _shunit_escape_xml)\"/>"
 
