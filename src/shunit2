@@ -918,10 +918,10 @@ _shunit_generateReport()
   _shunit_skipped_=${__shunit_assertsSkipped}
   _shunit_errors_=${__shunit_assertsError}
 
-#  # if no exit code was provided one, determine an appropriate one
-#  [ ${__shunit_testsFailed} -gt 0 \
-#      -o ${__shunit_testSuccess} -eq ${SHUNIT_FALSE} ] \
-#          && _shunit_ok_=${SHUNIT_FALSE}
+  # if no exit code was provided one, determine an appropriate one
+  [ ${__shunit_testsFailed} -gt 0 \
+      -o ${__shunit_testSuccess} -eq ${SHUNIT_FALSE} ] \
+          && _shunit_ok_=${SHUNIT_FALSE}
 
   if [ -n "${SHUNIT_OUTPUTDIR:-}" ]; then
     cat << EOF >> "${SHUNIT_OUTPUTDIR}/TEST-${__shunit_suite_name}.xml"
