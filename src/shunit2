@@ -1176,7 +1176,7 @@ fi
 unset shunit_func_ shunit_funcs_
 
 # get test suite name
-__shunit_suite_name=$(basename $0 | sed 's/\..*$//')
+__shunit_suite_name=$(basename "${__shunit_script}" | sed 's/\..*$//')
 
 # get environment
 if [ ${SHUNIT_INCLUDE_ENV} -eq ${SHUNIT_TRUE} ]; then
