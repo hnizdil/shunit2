@@ -848,9 +848,19 @@ _shunit_execSuite()
     # store the test case execution start time
     _shunit_case_starttime_=$(_shunit_ms_date)
 
-    # execute the test
     echo "${_shunit_case_}"
-    eval ${_shunit_case_}
+
+    # execute the test capturing its output
+    eval $_shunit_case_ >"$__shunit_system_out" 2>"$__shunit_system_err"
+
+    # show test output if failed
+    if [ $__shunit_testSuccess -ne $SHUNIT_TRUE ]; then
+      echo TEST FAILED!
+      echo STDOUT:
+      cat $__shunit_system_out | sed 's/^/--> /'
+      echo STDERR:
+      cat $__shunit_system_err | sed 's/^/--> /'
+    fi
 
     # store the test case execution end time and duration
     _shunit_case_endtime_=$(_shunit_ms_date)
@@ -1142,8 +1152,8 @@ if [ "${__shunit_mode}" = "${__SHUNIT_MODE_STANDALONE}" ]; then
 fi
 
 # create buffer files for stdout and stderr
-__shunit_system_out=$(mktemp 'shunit-out.XXXX')
-__shunit_system_err=$(mktemp 'shunit-err.XXXX')
+__shunit_system_out="$(readlink -f "$(mktemp 'shunit-out.XXXX')")"
+__shunit_system_err="$(readlink -f "$(mktemp 'shunit-err.XXXX')")"
 
 # alter file descriptors
 #exec 6>&1 7>&2
