@@ -134,7 +134,7 @@ __shunit_mode=${__SHUNIT_MODE_SOURCED}  # operating mode
 __shunit_reportGenerated=${SHUNIT_FALSE}  # is report generated
 __shunit_script=''  # filename of unittest script (standalone mode)
 __shunit_skip=${SHUNIT_FALSE}  # is skipping enabled
-__shunit_suite=''  # suite of tests to execute
+__shunit_suite=${__shunit_suite:-}  # suite of tests to execute
 __shunit_suite_name=''
 __shunit_cases=''
 __shunit_case_errors=''
@@ -143,7 +143,7 @@ __shunit_system_err=''
 
 # counts of tests
 __shunit_testSuccess=${SHUNIT_TRUE}
-__shunit_testsTotal=0
+__shunit_testsTotal=${__shunit_testsTotal:-0}
 __shunit_testsPassed=0
 __shunit_testsFailed=0
 
